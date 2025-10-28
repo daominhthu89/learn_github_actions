@@ -20,4 +20,8 @@ jobs:
           Write-Host "Current directory: $(Get-Location)"
           Write-Host "GitHub Workspace: $env:GITHUB_WORKSPACE"
 
-      - name: Ru
+      - name: Run sample script
+        shell: pwsh
+        run: |
+          Write-Host "This is where your automation would go."
+          Write-Host "For example, build your app or run tests."
