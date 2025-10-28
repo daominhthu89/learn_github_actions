@@ -1,27 +1,27 @@
 name: Run on Self-Hosted Runner
 
-# 🔹 Triggers
 on:
-  push:             # Runs when you push to any branch
-  workflow_dispatch: # Allows manual trigger from the Actions tab
+  push:
+  workflow_dispatch:
 
-# 🔹 Jobs section
 jobs:
   build:
-    runs-on: self-hosted  # Uses your self-hosted runner
+    runs-on: [self-hosted, Windows, X64]  # more specific label match
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Display environment info
+        shell: pwsh
         run: |
-          echo "✅ Running on a self-hosted runner!"
-          echo "User: $USER"
-          echo "Current directory: $(pwd)"
-          echo "GitHub Workspace: $GITHUB_WORKSPACE"
+          Write-Host "✅ Running on a self-hosted runner!"
+          Write-Host "User: $env:USERNAME"
+          Write-Host "Current directory: $(Get-Location)"
+          Write-Host "GitHub Workspace: $env:GITHUB_WORKSPACE"
 
       - name: Run sample script
+        shell: pwsh
         run: |
-          echo "This is where your automation would go."
-          echo "For example, build your app or run tests."
+          Write-Host "This is where your automation would go."
+          Write-Host "For example, build your app or run tests."
