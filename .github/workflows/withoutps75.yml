@@ -1,0 +1,32 @@
+name: Run on Self-Hosted Runner
+
+on:
+  push:
+  workflow_dispatch:
+
+# Make PowerShell the default shell for all run steps on this workflow
+defaults:
+  run:
+    shell: powershell
+
+jobs:
+  build:
+    runs-on: [self-hosted, Windows, X64]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0 pinned
+
+      - name: Display environment info
+        run: |
+          Write-Host "✅ Running on a self-hosted runner!"
+          Write-Host "User: $env:USERNAME"
+          Write-Host "Current directory: $(Get-Location)"
+          Write-Host "GitHub Workspace: $env:GITHUB_WORKSPACE"
+          Write-Host "PowerShell version table:"
+          $PSVersionTable
+
+      - name: Run sample script
+        run: |
+          Write-Host "This is where your automation would go."
+          Write-Host "For example, build your app or run tests."
