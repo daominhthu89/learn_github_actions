@@ -1,0 +1,32 @@
+name: CI - Node (Self-hosted Windows)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: [self-hosted, windows]
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4 # tip: pin to a commit SHA in production
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run with PowerShell 7 (absolute path)
+        shell: powershell
+        run: |
+          $ps7 = 'C:\Program Files\PowerShell\7\pwsh.exe'
+          if (-not (Test-Path $ps7)) { throw "PS7 not found at $ps7" }
+          & $ps7 -NoLogo -NoProfile -NonInteractive -Command @'
+            Write-Host "✅ Self-hosted Windows runner"
+            node --version
+            npm --version
+            npm ci
+            npm run build --if-present
+            npm test --if-present
+          '@
