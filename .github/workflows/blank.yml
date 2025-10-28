@@ -6,11 +6,11 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, Windows, X64]  # more specific label match
+    runs-on: [self-hosted, Windows, X64]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Display environment info
         shell: pwsh
@@ -20,8 +20,4 @@ jobs:
           Write-Host "Current directory: $(Get-Location)"
           Write-Host "GitHub Workspace: $env:GITHUB_WORKSPACE"
 
-      - name: Run sample script
-        shell: pwsh
-        run: |
-          Write-Host "This is where your automation would go."
-          Write-Host "For example, build your app or run tests."
+      - name: Ru
