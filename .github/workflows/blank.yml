@@ -13,31 +13,21 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 pinned
 
-      # Clean up PATH just for the rest of this job
-      - name: Fix broken PATH and prefer PowerShell 7
+      # Call PS7 by absolute path so we don't rely on PATH at all.
+      - name: Run with PowerShell 7 (absolute path, heredoc)
         shell: powershell
         run: |
-          $machine = [Environment]::GetEnvironmentVariable('Path','Machine')
-          $user    = [Environment]::GetEnvironmentVariable('Path','User')
-          $paths   = @()
-          if ($machine) { $paths += $machine.Split(';') }
-          if ($user)    { $paths += $user.Split(';') }
+          $ps7 = 'C:\Program Files\PowerShell\7\pwsh.exe'
+          if (-not (Test-Path $ps7)) {
+            throw "PowerShell 7 not found at $ps7. Install PowerShell 7 or adjust the path."
+          }
 
-          $clean = $paths |
-            Where-Object { $_ -and $_ -notmatch 'Oracle\\Java\\javapath' } |
-            ForEach-Object { $_.Trim('"') } |
-            Select-Object -Unique
-
-          $ps7 = 'C:\Program Files\PowerShell\7'
-          if (-not ($clean -contains $ps7)) { $clean = ,$ps7 + $clean }
-
-          'PATH=' + ($clean -join ';') | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-      - name: Run with PowerShell 7
-        shell: pwsh
-        run: |
-          Write-Host "✅ Running on a self-hosted runner!"
-          Write-Host "User: $env:USERNAME"
-          Write-Host "Current directory: $(Get-Location)"
-          Write-Host "GitHub Workspace: $env:GITHUB_WORKSPACE"
-          pwsh --version
+          # Show the PS7 version without relying on PATH inside PS7
+          & $ps7 -NoLogo -NoProfile -NonInteractive -Command @'
+            Write-Host "✅ Running on a self-hosted runner!"
+            Write-Host "User: $env:USERNAME"
+            Write-Host "Current directory: $(Get-Location)"
+            Write-Host "GitHub Workspace: $env:GITHUB_WORKSPACE"
+            Write-Host "PS7 Version: $($PSVersionTable.PSVersion)"
+            Write-Host "PS7 Home: $PSHOME"
+          '@
