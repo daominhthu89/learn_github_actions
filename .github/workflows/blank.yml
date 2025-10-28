@@ -1,13 +1,23 @@
-runs-on: [self-hosted, windows]
+name: Blank Test
 
-steps:
-  - uses: actions/checkout@v4
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/blank.yml"
 
-  - name: Run with hardcoded PowerShell 7
-    shell: '"C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo -NoProfile -Command'
-    run: |
-      Write-Host "✅ Running on a self-hosted runner!"
-      Write-Host "User: $env:USERNAME"
-      Write-Host "Current directory: $(Get-Location)"
-      Write-Host "GitHub Workspace: $env:GITHUB_WORKSPACE"
-      pwsh --version
+jobs:
+  test:
+    runs-on: [self-hosted, windows]
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Run with hardcoded PowerShell 7
+        shell: '"C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo -NoProfile -Command'
+        run: |
+          Write-Host "✅ Running on a self-hosted runner!"
+          Write-Host "User: $env:USERNAME"
+          Write-Host "Current directory: $(Get-Location)"
+          Write-Host "GitHub Workspace: $env:GITHUB_WORKSPACE"
+          pwsh --version
